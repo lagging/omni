@@ -1,0 +1,27 @@
+<configuration>
+
+    <property resource = "application.properties"/>
+    <property name="LOG_HOME" value = "/var/log/omni" />
+
+    <!--logger: gathers logging information from code, root is default logger(think of this as holding area)-->
+    <!--appender: publishes information that has been logged like : file, console-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+
+    <!--===============================================-->
+    <!--For Async appending logs-->
+    <!--===============================================-->
+    <appender name="CONSOLE-LOG" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="CONSOLE" />
+    </appender>
+
+
+    <logger name="com.creditsaison" level="INFO"/>
+
+    <root level = "INFO">
+        <appender-ref ref="CONSOLE-LOG" />
+    </root>
+
+</configuration>

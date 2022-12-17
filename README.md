@@ -1,5 +1,4 @@
-<img src="icon.png" align="right" />
-# README #
+# OMNI README 
 
 Following are the steps necessary to get your application up and running.
 
