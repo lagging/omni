@@ -15,7 +15,7 @@ import java.util.Date;
 public class FoodFacilityPermit {
 
     @Id
-    private Integer id;
+    private String id;
 
     private Integer locationId;
 
@@ -55,14 +55,24 @@ public class FoodFacilityPermit {
 
     private Date noiSent;
 
-    private Date approvedOn;
+    private Long approvedOn;
 
     private String received;
 
     private Integer priorPermitNumber;
 
-    private Date expirationDate;
+    private Long expirationDate;
 
     private GeoJsonPoint location;
+
+    private Integer firePreventionDistricts;
+
+    private Integer policeDistricts;
+
+    private Integer supervisionDistricts;
+
+    private Integer zipCodes;
+
+    private Integer neighbourHoodOld;
 
 }

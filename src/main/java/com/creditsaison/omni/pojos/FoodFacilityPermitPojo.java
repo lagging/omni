@@ -1,7 +1,6 @@
 package com.creditsaison.omni.pojos;
 
-import com.creditsaison.omni.enums.FacilityType;
-import com.creditsaison.omni.enums.Status;
+import com.creditsaison.omni.validators.ValidDateFormat;
 import com.creditsaison.omni.validators.ValidFacilityType;
 import com.creditsaison.omni.validators.ValidLocation;
 import com.creditsaison.omni.validators.ValidStatus;
@@ -24,6 +23,7 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FoodFacilityPermitPojo {
 
+    private String id;
     @NotNull
     private Integer locationId;
 
@@ -86,6 +86,7 @@ public class FoodFacilityPermitPojo {
 
     private Date noiSent;
 
+    @ValidDateFormat()
     private String approvedOn;
 
     @NotNull
@@ -96,8 +97,7 @@ public class FoodFacilityPermitPojo {
     private Integer priorPermitNumber;
 
 
-    @NotNull
-    @NotEmpty
+    @ValidDateFormat()
     private String expirationDate;
 
     @ValidLocation()
