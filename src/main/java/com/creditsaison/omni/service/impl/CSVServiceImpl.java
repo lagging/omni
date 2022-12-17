@@ -55,7 +55,7 @@ public class CSVServiceImpl implements CSVService {
                     foodFacilityPermit.setLocationId(Integer.valueOf(csvRecord.get("locationid")));
                 }
                 foodFacilityPermit.setApplicant(csvRecord.get("Applicant"));
-                foodFacilityPermit.setFacilityType(csvRecord.get("Applicant"));
+                foodFacilityPermit.setFacilityType(csvRecord.get("FacilityType"));
                 if (StringUtils.isNotEmpty(csvRecord.get("cnn"))) {
                     foodFacilityPermit.setCnn(Integer.valueOf(csvRecord.get("cnn")));
                 }

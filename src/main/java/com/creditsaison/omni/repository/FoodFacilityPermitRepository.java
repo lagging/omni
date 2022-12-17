@@ -23,6 +23,6 @@ public interface FoodFacilityPermitRepository extends MongoRepository<FoodFacili
 
     List<FoodFacilityPermit> findFoodFacilityPermitsByApplicantAndAddressAndExpirationDateBefore(String applicant, String address, Long time, Pageable pageable);
 
-    FoodFacilityPermit findByFacilityTypeAndLocationNear(String facilityType, Point point);
+    List<FoodFacilityPermit> findByFacilityTypeAndLocationNear(String facilityType, Point point);
 
 }

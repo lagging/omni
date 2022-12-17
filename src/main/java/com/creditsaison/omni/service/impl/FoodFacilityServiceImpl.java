@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -96,10 +98,15 @@ public class FoodFacilityServiceImpl implements FoodFacilityService {
 
     @Override
     public FoodFacilityPermit searchNearestFacilityType(NearestFacilityTypeRequest nearestFacilityTypeRequest) {
+        FoodFacilityPermit nearestFoodFacilityPermit = null;
         String facilityType = nearestFacilityTypeRequest.getFacilityType();
         double latitude = Double.parseDouble(nearestFacilityTypeRequest.getLatitude());
         double longitude = Double.parseDouble(nearestFacilityTypeRequest.getLongitude());
-        return foodFacilityPermitRepository.findByFacilityTypeAndLocationNear(facilityType, new Point(longitude, latitude));
+        List<FoodFacilityPermit> foodFacilityPermitList = foodFacilityPermitRepository.findByFacilityTypeAndLocationNear(facilityType, new Point(longitude, latitude));
+        if (CollectionUtils.isEmpty(foodFacilityPermitList)){
+            return nearestFoodFacilityPermit;
+        }
+        return foodFacilityPermitList.get(0);
     }
 
 
