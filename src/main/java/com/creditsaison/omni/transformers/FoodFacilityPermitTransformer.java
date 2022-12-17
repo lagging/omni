@@ -3,7 +3,7 @@ package com.creditsaison.omni.transformers;
 import com.creditsaison.omni.document.FoodFacilityPermit;
 import com.creditsaison.omni.pojos.FoodFacilityPermitPojo;
 import com.creditsaison.omni.util.exception.LocationUtils;
-import com.creditsaison.omni.util.exception.date.DateTimeUtil;
+import com.creditsaison.omni.util.date.DateTimeUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

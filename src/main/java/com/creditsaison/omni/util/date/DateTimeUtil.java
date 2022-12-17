@@ -1,4 +1,6 @@
-package com.creditsaison.omni.util.exception.date;
+package com.creditsaison.omni.util.date;
+
+import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +24,9 @@ public class DateTimeUtil {
 
     public static Long getEpochDateFromString(String inputDate, String format){
         Long epochDate = null;
+        if (StringUtils.isEmpty(inputDate)){
+            return null;
+        }
         Date date = getDateFromString(inputDate, format);
         if (Objects.nonNull(date)){
             epochDate = date.getTime();

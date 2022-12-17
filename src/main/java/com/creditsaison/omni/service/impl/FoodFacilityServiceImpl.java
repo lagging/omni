@@ -9,7 +9,7 @@ import com.creditsaison.omni.service.FoodFacilityService;
 import com.creditsaison.omni.transformers.FoodFacilityPermitTransformer;
 import com.creditsaison.omni.util.exception.CSException;
 import com.creditsaison.omni.util.exception.ErrorCode;
-import com.creditsaison.omni.util.exception.date.DateTimeUtil;
+import com.creditsaison.omni.util.date.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

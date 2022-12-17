@@ -53,6 +53,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.8</version>
+        </dependency>
+
         <!--for logging in defined format-->
         <dependency>
             <groupId>net.logstash.logback</groupId>
