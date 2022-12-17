@@ -29,4 +29,17 @@ public class DateTimeUtil {
         return epochDate;
     }
 
+    public static boolean isValidDate(String date){
+        boolean isValid = true;
+        String format = "MM/dd/yyyy hh:mm:ss a";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            dateFormat.parse(date);
+        } catch (ParseException e) {
+            isValid = false;
+        }
+        return isValid;
+    }
+
 }
