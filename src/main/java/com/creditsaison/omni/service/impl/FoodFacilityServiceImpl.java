@@ -7,9 +7,9 @@ import com.creditsaison.omni.pojos.response.FoodFacilitySearchResponse;
 import com.creditsaison.omni.repository.FoodFacilityPermitRepository;
 import com.creditsaison.omni.service.FoodFacilityService;
 import com.creditsaison.omni.transformers.FoodFacilityPermitTransformer;
+import com.creditsaison.omni.util.date.DateTimeUtil;
 import com.creditsaison.omni.util.exception.CSException;
 import com.creditsaison.omni.util.exception.ErrorCode;
-import com.creditsaison.omni.util.date.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -36,6 +35,7 @@ public class FoodFacilityServiceImpl implements FoodFacilityService {
         return foodFacilityPermitRepository.save(foodFacilityPermit);
     }
 
+    //TODO: multiple if blocks can be replaced by strategy design pattern here
     @Override
     public FoodFacilitySearchResponse search(String applicantName,
                                              String streetName,
