@@ -13,6 +13,7 @@ import com.creditsaison.omni.util.exception.date.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -96,10 +97,9 @@ public class FoodFacilityServiceImpl implements FoodFacilityService {
     @Override
     public FoodFacilityPermit searchNearestFacilityType(NearestFacilityTypeRequest nearestFacilityTypeRequest) {
         String facilityType = nearestFacilityTypeRequest.getFacilityType();
-        Double latitude = Double.valueOf(nearestFacilityTypeRequest.getLatitude());
-        Double longitude = Double.valueOf(nearestFacilityTypeRequest.getLongitude());
-
-        return null;
+        double latitude = Double.parseDouble(nearestFacilityTypeRequest.getLatitude());
+        double longitude = Double.parseDouble(nearestFacilityTypeRequest.getLongitude());
+        return foodFacilityPermitRepository.findByFacilityTypeAndLocationNear(facilityType, new Point(longitude, latitude));
     }
 
 

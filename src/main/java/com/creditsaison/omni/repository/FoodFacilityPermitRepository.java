@@ -2,6 +2,7 @@ package com.creditsaison.omni.repository;
 
 import com.creditsaison.omni.document.FoodFacilityPermit;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -21,5 +22,7 @@ public interface FoodFacilityPermitRepository extends MongoRepository<FoodFacili
     List<FoodFacilityPermit> findFoodFacilityPermitsByAddressAndExpirationDateBeforeOrderByIdDesc(String address, Long time, Pageable pageable);
 
     List<FoodFacilityPermit> findFoodFacilityPermitsByApplicantAndAddressAndExpirationDateBefore(String applicant, String address, Long time, Pageable pageable);
+
+    FoodFacilityPermit findByFacilityTypeAndLocationNear(String facilityType, Point point);
 
 }
