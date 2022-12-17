@@ -1,16 +1,16 @@
 package com.creditsaison.omni.controllers;
 
 import com.creditsaison.omni.pojos.FoodFacilityPermitPojo;
+import com.creditsaison.omni.pojos.NearestFacilityTypeRequest;
 import com.creditsaison.omni.service.FoodFacilityService;
-import com.creditsaison.omni.util.exception.CSException;
-import com.creditsaison.omni.util.exception.ErrorCode;
-import org.apache.commons.lang.StringUtils;
+import com.creditsaison.omni.util.exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(path = "/api/v1/food-facility")
@@ -32,4 +32,11 @@ public class FoodFacilityPermitController extends BaseController {
                                     @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize) {
         return this.executeTask(() -> foodFacilityService.search(applicantName, streetName, expirationDate, pageNumber, pageSize));
     }
+
+    @GetMapping(path = "/facility", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> searchNearestFacilityType(@Valid @ModelAttribute NearestFacilityTypeRequest nearestFacilityTypeRequest) throws BadRequestException {
+        return this.executeTask(() -> foodFacilityService.searchNearestFacilityType(nearestFacilityTypeRequest));
+    }
+
+
 }

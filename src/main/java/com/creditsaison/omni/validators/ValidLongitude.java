@@ -4,12 +4,13 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
+@Target({ ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FacilityTypeValidator.class)
+@Constraint(validatedBy = LongitudeValidator.class)
 @Documented
-public @interface ValidFacilityType {
-    String message() default "{FacilityType.invalid}";
+public @interface ValidLongitude {
+
+    String message() default "{Longitude.invalid}";
 
     Class<?>[] groups() default { };
 

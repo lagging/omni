@@ -1,10 +1,11 @@
 package com.creditsaison.omni.document;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -12,6 +13,14 @@ import java.util.Date;
 @Getter
 @Setter
 @Document
+@CompoundIndexes(
+        {
+                @CompoundIndex(name = "applicant_1_address_1_expirationDate_1", def = "{'applicant' : 1, 'address': 1, 'expirationDate': 1}"),
+                @CompoundIndex(name = "applicant_1_expirationDate_1", def = "{'applicant' : 1, 'expirationDate': 1}"),
+                @CompoundIndex(name = "address_1_expirationDate_1", def = "{'address': 1, 'expirationDate': 1}"),
+                @CompoundIndex(name = "expirationDate_1", def = "{'expirationDate': 1}"),
+        }
+)
 public class FoodFacilityPermit {
 
     @Id

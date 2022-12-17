@@ -2,6 +2,7 @@ package com.creditsaison.omni.service.impl;
 
 import com.creditsaison.omni.document.FoodFacilityPermit;
 import com.creditsaison.omni.pojos.FoodFacilityPermitPojo;
+import com.creditsaison.omni.pojos.NearestFacilityTypeRequest;
 import com.creditsaison.omni.pojos.response.FoodFacilitySearchResponse;
 import com.creditsaison.omni.repository.FoodFacilityPermitRepository;
 import com.creditsaison.omni.service.FoodFacilityService;
@@ -90,6 +91,15 @@ public class FoodFacilityServiceImpl implements FoodFacilityService {
         return FoodFacilitySearchResponse.builder()
                 .foodFacilityPermitList(foodFacilityPermitList)
                 .build();
+    }
+
+    @Override
+    public FoodFacilityPermit searchNearestFacilityType(NearestFacilityTypeRequest nearestFacilityTypeRequest) {
+        String facilityType = nearestFacilityTypeRequest.getFacilityType();
+        Double latitude = Double.valueOf(nearestFacilityTypeRequest.getLatitude());
+        Double longitude = Double.valueOf(nearestFacilityTypeRequest.getLongitude());
+
+        return null;
     }
 
 
