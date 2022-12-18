@@ -1,6 +1,7 @@
 package com.creditsaison.omni.service.impl;
 
 import com.creditsaison.omni.document.FoodFacilityPermit;
+import com.creditsaison.omni.enums.FoodFacilitySearchType;
 import com.creditsaison.omni.pojos.FoodFacilityPermitPojo;
 import com.creditsaison.omni.pojos.NearestFacilityTypeRequest;
 import com.creditsaison.omni.pojos.response.FoodFacilitySearchResponse;
@@ -35,7 +36,6 @@ public class FoodFacilityServiceImpl implements FoodFacilityService {
         return foodFacilityPermitRepository.save(foodFacilityPermit);
     }
 
-    //TODO: multiple if blocks can be replaced by strategy design pattern here
     @Override
     public FoodFacilitySearchResponse search(String applicantName,
                                              String streetName,
@@ -57,44 +57,48 @@ public class FoodFacilityServiceImpl implements FoodFacilityService {
             }
             expirationDateInEpoch = DateTimeUtil.getEpochDateFromString(expirationDate, "MM/dd/yyyy hh:mm:ss a");
         }
-        if (isApplicantNamePresent && isStreetNamePresent && isExpiryDatePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByApplicantAndAddressAndExpirationDateBefore(applicantName,
-                    streetName,
-                    expirationDateInEpoch,
-                    PageRequest.of(pageNumber, pageSize));
-        }
-        if (isApplicantNamePresent && isStreetNamePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByApplicantAndAddressOrderByIdDesc(applicantName,
-                    streetName,
-                    PageRequest.of(pageNumber, pageSize));
-        }
-        if (isApplicantNamePresent && isExpiryDatePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByApplicantAndExpirationDateBeforeOrderByIdDesc(applicantName,
-                    expirationDateInEpoch,
-                    PageRequest.of(pageNumber, pageSize));
-        }
-        if (isStreetNamePresent && isExpiryDatePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByAddressAndExpirationDateBeforeOrderByIdDesc(streetName,
-                    expirationDateInEpoch,
-                    PageRequest.of(pageNumber, pageSize));
-        }
-        if (isApplicantNamePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitByApplicantOrderByIdDesc(applicantName,
-                    PageRequest.of(pageNumber, pageSize));
-        }
-        if (isStreetNamePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitByAddressOrderByIdDesc(streetName,
-                    PageRequest.of(pageNumber, pageSize));
-        }
-        if (isExpiryDatePresent) {
-            foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByExpirationDateBefore(expirationDateInEpoch,
-                    PageRequest.of(pageNumber, pageSize));
-        }
+        FoodFacilitySearchType foodFacilitySearchType = FoodFacilitySearchType.getFoodFacilitySearchType(isApplicantNamePresent, isStreetNamePresent, isExpiryDatePresent);
+        switch (foodFacilitySearchType){
+            case APPLICANT_STREET_EXPIRY_DATE:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByApplicantAndAddressAndExpirationDateBefore(applicantName,
+                        streetName,
+                        expirationDateInEpoch,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
+            case APPLICANT_STREET:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByApplicantAndAddressOrderByIdDesc(applicantName,
+                        streetName,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
+            case APPLICANT_EXPIRY_DATE:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByApplicantAndExpirationDateBeforeOrderByIdDesc(applicantName,
+                        expirationDateInEpoch,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
+            case STREET_EXPIRY_DATE:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByAddressAndExpirationDateBeforeOrderByIdDesc(streetName,
+                        expirationDateInEpoch,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
+            case APPLICANT:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitByApplicantOrderByIdDesc(applicantName,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
+            case STREET:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitByAddressOrderByIdDesc(streetName,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
+            case EXPIRY_DATE:
+                foodFacilityPermitList = foodFacilityPermitRepository.findFoodFacilityPermitsByExpirationDateBefore(expirationDateInEpoch,
+                        PageRequest.of(pageNumber, pageSize));
+                break;
 
+        }
         return FoodFacilitySearchResponse.builder()
                 .foodFacilityPermitList(foodFacilityPermitList)
                 .build();
     }
+
 
     @Override
     public FoodFacilityPermit searchNearestFacilityType(NearestFacilityTypeRequest nearestFacilityTypeRequest) {
