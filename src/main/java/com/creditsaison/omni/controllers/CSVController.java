@@ -26,4 +26,14 @@ public class CSVController extends BaseController {
         }
         return this.executeTask(() -> csvService.save(file));
     }
+
+    @PostMapping("/parseCsv")
+    public ResponseEntity<?> parseFile(@RequestParam("file") MultipartFile file) throws CSException {
+        if (!CSVUtil.hasCSVFormat(file)) {
+            throw new CSException(ErrorCode.BAD_REQUEST_ERROR, "Please provide csv file");
+        }
+        return this.executeTask(() -> csvService.parseCSV(file));
+    }
+
+
 }
