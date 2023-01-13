@@ -10,4 +10,6 @@ public interface CSVService {
     boolean save(MultipartFile file) throws IOException;
 
     BatchesNPSInfo parseCSV(MultipartFile file) throws IOException;
+
+    BatchesNPSInfo parseManualCsv(MultipartFile file) throws IOException;
 }

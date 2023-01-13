@@ -53,6 +53,13 @@ public class CSVServiceImpl implements CSVService {
         return batchesNPSInfoP;
     }
 
+    @Override
+    public BatchesNPSInfo parseManualCsv(MultipartFile file) throws IOException {
+        BatchesNPSInfo batchesNPSInfoD = csvToBatchesNPSManual(file.getInputStream(), "D");
+        writeToFile(batchesNPSInfoD,"Nps-manual-D.csv");
+        return batchesNPSInfoD;
+    }
+
     private void writeToFile(BatchesNPSInfo batchesNPSInfo, String fileName){
         File file = new File("/Users/mr/Downloads/"+fileName);
         List<BatchInfo> batchInfoList = batchesNPSInfo.getBatchInfoList();
@@ -85,6 +92,101 @@ public class CSVServiceImpl implements CSVService {
             e.printStackTrace();
         }
     }
+
+    private BatchesNPSInfo csvToBatchesNPSManual(InputStream is, String type) throws IOException {
+        Set<String> batches = new HashSet<>();
+        List<BatchInfo> batchInfoList = new ArrayList<>();
+        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+        ) {
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+            for (CSVRecord csvRecord : csvRecords) {
+                String batchName = csvRecord.get("Batch_Name");
+                batches.add(batchName);
+            }
+            for (String batch : batches) {
+                csvRecords = getCSVParserManual();
+                Map<String,Set<String>> mainTagSubTag = new HashMap<>();
+                Map<String, Integer> subTagCount = new HashMap<>();
+                for (CSVRecord csvRecord : csvRecords) {
+                    if ( !csvRecord.get("Batch_Name").equals(batch)){
+                        continue;
+                    }
+                    List<String> mainTags = Arrays.asList("Teaching_Assistance",
+                            "Sales/Scaler_Course/Finance",
+                            "Mentor",
+                            "Demotivated/Time_Management",
+                            "Placements",
+                            "Customer_Support",
+                            "Dashboard",
+                            "Classroom",
+                            "Instructor/topic",
+                            "Rated_by_mistake",
+                            "Others/No_Issues" );
+                    for (String mainTag : mainTags) {
+                        String subTagsStr = csvRecord.get(mainTag);
+                        if (StringUtils.isEmpty(subTagsStr)){
+                            continue;
+                        }
+                        Set<String> subTags = mainTagSubTag.getOrDefault(mainTag, new HashSet<>());
+                        subTags.add(subTagsStr);
+                        mainTagSubTag.put(mainTag, subTags);
+                        int existingCount = subTagCount.getOrDefault(subTagsStr, 0);
+                        subTagCount.put(subTagsStr, existingCount + 1);
+                    }
+                }
+                Map<String, Map<String, Integer>> tagSubTagNameCount = getTagNameSubTagNameWithCountManual(mainTagSubTag, subTagCount);
+                List<MainTagInfo> mainTagInfoList = new ArrayList<>();
+                for (Map.Entry<String, Map<String, Integer>> stringMapEntry : tagSubTagNameCount.entrySet()) {
+                    mainTagInfoList.add(MainTagInfo.builder()
+                            .mainTagName(stringMapEntry.getKey())
+                            .subTagNameCountMap(stringMapEntry.getValue())
+                            .build());
+                }
+                BatchInfo batchInfo = BatchInfo.builder()
+                        .batchName(batch)
+                        .mainTagInfoList(mainTagInfoList)
+                        .build();
+                batchInfoList.add(batchInfo);
+            }
+            return BatchesNPSInfo.builder()
+                    .batchInfoList(batchInfoList)
+                    .build();
+        } catch (IOException e) {
+            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
+        }
+    }
+
+    private Map<String, Map<String, Integer>> getTagNameSubTagNameWithCountManual(Map<String,Set<String>> mainTagSubTag,
+                                                                                  Map<String, Integer> subTagCount){
+        Map<String, Map<String, Integer>> ans = new HashMap<>();
+        for (Map.Entry<String,Set<String>> entry: mainTagSubTag.entrySet()){
+            String mainTag = entry.getKey();
+            Set<String> subTags = entry.getValue();
+            for (String subTag: subTags){
+                int count = subTagCount.getOrDefault(subTag, 0);
+                Map<String, Integer> subTagCountMap = ans.getOrDefault(mainTag, new HashMap<>());
+                subTagCountMap.put(subTag, count);
+                ans.put(mainTag, subTagCountMap);
+            }
+        }
+        return ans;
+    }
+
+
+    /*
+    * Teaching_Assistance
+    * Sales/Scaler_Course/Finance
+    * Mentor
+    * Demotivated/Time_Management
+    * Placements
+    * Customer_Support
+    * Dashboard
+    * Classroom
+    * Instructor/topic
+    * Rated_by_mistake
+    * Others/No_Issues
+    * */
 
     private BatchesNPSInfo csvToBatchesNPS(InputStream is, String type) throws IOException {
         Set<String> batches = new HashSet<>();
@@ -161,6 +263,17 @@ public class CSVServiceImpl implements CSVService {
     private Iterable<CSVRecord> getCSVParser(){
         try (
                 Reader reader = Files.newBufferedReader(Paths.get("/Users/mr/Downloads/WorkingSheet.csv"));
+                CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+        ) {
+            return csvParser.getRecords();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Iterable<CSVRecord> getCSVParserManual(){
+        try (
+                Reader reader = Files.newBufferedReader(Paths.get("/Users/mr/Downloads/2022_NPS.csv"));
                 CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
         ) {
             return csvParser.getRecords();
